@@ -12,9 +12,17 @@ export const handler = async (event: any = {}): Promise<any> => {
   const pipelineMessage = JSON.parse(event.Records[0].Sns.Message);
   const region = pipelineMessage.region;
   const pipelineName = pipelineMessage.detail.pipeline;
-  const pipelineExecutionId = pipelineMessage.detail['execition-id'];
+  const pipelineExecutionId = pipelineMessage.detail['execution-id'];
   const stage = pipelineMessage.detail.stage;
   const state = pipelineMessage.detail.state;
+
+  console.log(JSON.stringify({
+    region,
+    pipelineName,
+    pipelineExecutionId,
+    stage,
+    state,
+  }));
 
   const client = new CodePipelineClient({region});
   const input: GetPipelineExecutionInput = {
