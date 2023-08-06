@@ -8,6 +8,7 @@
     "@types/uuid": "*"
   },
   "dependencies": {
+    "@aws-sdk/client-codepipeline": "^3.385.0",
     "aws-sdk": "*",
     "uuid": "*"
   }
