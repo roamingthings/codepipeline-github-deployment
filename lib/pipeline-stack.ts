@@ -16,8 +16,18 @@ export class PipelineStack extends cdk.Stack {
     // // var ghToken = Secret.fromSecretCompleteArn(this, "GhToken", tokenForInstallingPackagesSecretArn);
 
     const pipeline = this.createPipeline();
-    pipeline.addStage(new ApplicationStage(this, 'Test'));
-    pipeline.addStage(new ApplicationStage(this, 'Prod'));
+    pipeline.addStage(new ApplicationStage(this, 'TestStage', {
+      tags: {
+        'stage': 'test',
+        ...props?.tags
+      },
+    }));
+    pipeline.addStage(new ApplicationStage(this, 'ProdStage', {
+      tags: {
+        'stage': 'prod',
+        ...props?.tags
+      },
+    }));
   }
 
   private createPipeline(): pipelines.CodePipeline {
