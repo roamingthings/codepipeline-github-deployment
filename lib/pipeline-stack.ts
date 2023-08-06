@@ -12,6 +12,8 @@ import {ApplicationStage} from "./application-stage";
 import * as sns from 'aws-cdk-lib/aws-sns';
 import {NodejsFunction, NodejsFunctionProps} from 'aws-cdk-lib/aws-lambda-nodejs';
 import {join} from 'path'
+import {Pipeline} from "aws-cdk-lib/aws-codepipeline";
+import * as iam from "aws-cdk-lib/aws-iam";
 
 export class PipelineStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -33,14 +35,14 @@ export class PipelineStack extends cdk.Stack {
 
     pipeline.buildPipeline();
 
-    const publishGitHubDeploymentFunction = this.createPublishGitHubDeploymentFunction();
+    const publishGitHubDeploymentFunction = this.createPublishGitHubDeploymentFunction(pipeline.pipeline);
     const notificationTopic = new sns.Topic(this, 'PipelineNotificationTopic');
     notificationTopic.addSubscription(new subs.LambdaSubscription(publishGitHubDeploymentFunction));
     this.createPipelineNotificationRule(pipeline.pipeline, notificationTopic);
 
   }
 
-  private createPublishGitHubDeploymentFunction() {
+  private createPublishGitHubDeploymentFunction(pipeline: Pipeline) {
     const ghTokenParameter = ssm.StringParameter.fromSecureStringParameterAttributes(this, 'GhToken', {
       parameterName: 'github-token',
     });
@@ -62,6 +64,15 @@ export class PipelineStack extends cdk.Stack {
       ...nodeJsFunctionProps,
     });
     ghTokenParameter.grantRead(publishGitHubDeploymentFunction);
+    publishGitHubDeploymentFunction.role?.addToPrincipalPolicy(iam.PolicyStatement.fromJson({
+      "Effect": "Allow",
+      "Action": [
+        "codepipeline:GetPipelineExecution*",
+        "codepipeline:GetPipeline*",
+        ],
+      "Resource": pipeline.pipelineArn,
+    }));
+
     return publishGitHubDeploymentFunction;
   }
 
@@ -85,7 +96,6 @@ export class PipelineStack extends cdk.Stack {
     });
 
     return new pipelines.CodePipeline(this, "Pipeline", {
-      // pipelineName: props.getPipeline().getName(),
       selfMutation: true,
       crossAccountKeys: true,
       synthCodeBuildDefaults: {
