@@ -31,6 +31,8 @@ export class PipelineStack extends cdk.Stack {
       },
     }));
 
+    pipeline.buildPipeline();
+
     const publishGitHubDeploymentFunction = this.createPublishGitHubDeploymentFunction();
     const notificationTopic = new sns.Topic(this, 'PipelineNotificationTopic');
     notificationTopic.addSubscription(new subs.LambdaSubscription(publishGitHubDeploymentFunction));
