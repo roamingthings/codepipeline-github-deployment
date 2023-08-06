@@ -1,0 +1,14 @@
+{
+  "name": "lambda-publish-deployment",
+  "version": "1.0.0",
+  "description": "Lambda to publish a deployment to GitHub",
+  "private": true,
+  "devDependencies": {
+    "@types/node": "*",
+    "@types/uuid": "*"
+  },
+  "dependencies": {
+    "aws-sdk": "*",
+    "uuid": "*"
+  }
+}
