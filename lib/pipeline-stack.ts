@@ -31,14 +31,14 @@ export class PipelineStack extends cdk.Stack {
       },
     }));
 
-    const publishGitHubDeploymentFunction = this.craetePublishGitHubDeploymentFunction();
+    const publishGitHubDeploymentFunction = this.createPublishGitHubDeploymentFunction();
     const notificationTopic = new sns.Topic(this, 'PipelineNotificationTopic');
     notificationTopic.addSubscription(new subs.LambdaSubscription(publishGitHubDeploymentFunction));
     this.createPipelineNotificationRule(pipeline.pipeline, notificationTopic);
 
   }
 
-  private craetePublishGitHubDeploymentFunction() {
+  private createPublishGitHubDeploymentFunction() {
     const ghTokenParameter = ssm.StringParameter.fromSecureStringParameterAttributes(this, 'GhToken', {
       parameterName: 'github-token',
     });
