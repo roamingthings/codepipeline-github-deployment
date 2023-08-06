@@ -46,18 +46,16 @@ export const handler = async (event: any = {}): Promise<any> => {
   const pipelineCommand = new GetPipelineCommand(inputPipeline);
   const pipelineResponse = await client.send(pipelineCommand);
 
-  pipelineResponse.pipeline?.stages?.forEach(stage => {
-    stage.actions?.forEach(action => {
-      console.log(JSON.stringify({
-        name: action.name,
-        configuration: action.configuration,
-      }));
+  const repositoryId = pipelineResponse.pipeline?.stages?.flatMap(stage =>
+    stage.actions?.map(action => {
       if (action.configuration?.FullRepositoryId) {
-        const fullRepositoryId = action.configuration?.FullRepositoryId
-        console.log(JSON.stringify({
-          fullRepositoryId,
-        }));
+        return action.configuration?.FullRepositoryId
+      } else {
+        return undefined;
       }
-    });
-  });
+    })
+  );
+  console.log(JSON.stringify({
+    repositoryId,
+  }));
 };
