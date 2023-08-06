@@ -10,8 +10,8 @@ import * as codebuild from 'aws-cdk-lib/aws-codebuild';
 import * as subs from 'aws-cdk-lib/aws-sns-subscriptions';
 import {ApplicationStage} from "./application-stage";
 import * as sns from 'aws-cdk-lib/aws-sns';
-import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs';
-import { join } from 'path'
+import {NodejsFunction, NodejsFunctionProps} from 'aws-cdk-lib/aws-lambda-nodejs';
+import {join} from 'path'
 
 export class PipelineStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -48,7 +48,7 @@ export class PipelineStack extends cdk.Stack {
           'aws-sdk',
         ],
       },
-      depsLockFilePath: join(__dirname, 'lambdas', 'package-lock.json'),
+      depsLockFilePath: join(__dirname, '../lambdas', 'package-lock.json'),
       environment: {
         GITHUB_TOKEN_SSM_PARAMETER_NAME: ghTokenParameter.parameterArn,
       },
