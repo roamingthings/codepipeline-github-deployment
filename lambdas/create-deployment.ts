@@ -48,14 +48,13 @@ export const handler = async (event: any = {}): Promise<any> => {
 
   const repositoryId = pipelineResponse.pipeline?.stages?.flatMap(stage =>
     stage.actions?.map(action => {
-      if (action.configuration?.FullRepositoryId) {
-        return action.configuration?.FullRepositoryId
-      } else {
-        return undefined;
-      }
+      return action.configuration?.FullRepositoryId;
     })
-  );
+  ).find(value => value !== undefined && value !== null);
+
   console.log(JSON.stringify({
-    repositoryId,
+    repositoryId: repositoryId,
+    ref: commitId,
+    environment: stage,
   }));
 };
