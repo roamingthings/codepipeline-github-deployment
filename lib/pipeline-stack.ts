@@ -56,7 +56,7 @@ export class PipelineStack extends cdk.Stack {
       architecture: lambda.Architecture.ARM_64,
     }
     const publishGitHubDeploymentFunction = new NodejsFunction(this, 'PublishGitHubDeploymentFunction', {
-      entry: join(__dirname, 'lambdas', 'create-deployment.ts'),
+      entry: join(__dirname, '../lambdas', 'create-deployment.ts'),
       ...nodeJsFunctionProps,
     });
     ghTokenParameter.grantRead(publishGitHubDeploymentFunction);
