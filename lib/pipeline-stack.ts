@@ -96,6 +96,7 @@ export class PipelineStack extends cdk.Stack {
         buildEnvironment: {
           buildImage: codebuild.LinuxBuildImage.STANDARD_7_0,
           computeType: codebuild.ComputeType.SMALL,
+          privileged: true,
         },
       },
       synth: this.createSynthStep(githubConnection.attrConnectionArn),
